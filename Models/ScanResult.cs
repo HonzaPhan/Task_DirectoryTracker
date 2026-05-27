@@ -10,4 +10,9 @@ public class ScanResult
     public List<FileChange> ModifiedFiles { get; init; } = [];
     public List<string> DeletedFiles { get; init; } = [];
     public List<string> DeletedDirectories { get; init; } = [];
+
+    public bool HasAddedFiles => AddedFiles is { Count: > 0 };
+    public bool HasModifiedFiles => ModifiedFiles is { Count: > 0 };
+    public bool HasDeletedFiles => DeletedFiles is { Count: > 0 };
+    public bool HasDeletedDirectories => DeletedDirectories is { Count: > 0 };
 }
