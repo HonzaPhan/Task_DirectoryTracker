@@ -4,6 +4,6 @@ namespace Task_DirectoryTracker.Models.ViewModels;
 
 public class ScanRequestViewModel
 {
-    [Required(ErrorMessage = "Path is required.")]
+    [Required(ErrorMessage = "Prosím zadejte cestu k adresáři.")]
     public string Path { get; set; } = string.Empty;
 }
