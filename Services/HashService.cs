@@ -4,8 +4,8 @@ using Task_DirectoryTracker.Abstractions;
 namespace Task_DirectoryTracker.Services;
 
 /// <summary>
-/// This class represents a service that computes the hash of a file using the SHA256 algorithm. 
-/// It implements the IHashService interface, which defines a method for computing the hash of a file given its path. 
+/// This class represents a service that computes the hash of a file using the SHA256 algorithm. <br />
+/// It implements the IHashService interface, which defines a method for computing the hash of a file given its path. <br />
 /// The computed hash is returned as a hexadecimal string.
 /// </summary>
 public sealed class HashService : IHashService

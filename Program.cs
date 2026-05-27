@@ -1,3 +1,8 @@
+using Task_DirectoryTracker.Abstractions;
+using Task_DirectoryTracker.Middlewares;
+using Task_DirectoryTracker.Models;
+using Task_DirectoryTracker.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +10,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IHashService, HashService>();
 builder.Services.AddScoped<IDirectoryScanner, DirectoryScanner>();
 builder.Services.AddScoped<IChangeDetector, ChangeDetector>();
+builder.Services.AddScoped<ISnapshotStorage, SnapshotStorage>();
+
+// Configure addtional settings from appsettings.json
+builder.Services.Configure<SnapshotSetting>(builder.Configuration.GetSection("SnapshotSettings"));
 
 var app = builder.Build();
 
