@@ -4,6 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IHashService, HashService>();
 builder.Services.AddScoped<IDirectoryScanner, DirectoryScanner>();
+builder.Services.AddScoped<IChangeDetector, ChangeDetector>();
 
 var app = builder.Build();
 
