@@ -2,6 +2,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<IHashService, HashService>();
+builder.Services.AddScoped<IDirectoryScanner, DirectoryScanner>();
 
 var app = builder.Build();
 
