@@ -1,136 +1,92 @@
-﻿@model ScanPageViewModel
+﻿@using Task_DirectoryTracker.Models.ViewModels
+@using Task_DirectoryTracker.Models.Entities
+
+@model ScanPageViewModel
 
 @{
     ViewData["Title"] = "Directory Scanner";
 }
 
 <div class="container py-4">
-    <div class="d-flex align-items-center justify-content-between mb-3">
-        <h1 class="h3 mb-0">Directory Tracker</h1>
-    </div>
+    <h1 class="h3 mb-3">Directory Tracker</h1>
 
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <form asp-action="Index" method="post" class="row g-3">
+            <form asp-action="Index" method="post" class="row g-3" id="scan-form">
                 <div class="col-12">
-                    <label for="path" class="form-label">Cesta k adresáři</label>
-                    <input type="text" id="path" name="path" class="form-control" placeholder="C:\test\folder" />
+                    <label asp-for="Request.Path" class="form-label">Cesta k adresáři</label>
+                    <input asp-for="Request.Path" class="form-control" placeholder="C:\test\folder" />
+                    <span asp-validation-for="Request.Path" class="text-danger"></span>
                 </div>
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary">
-                        Spustit analýzu
+                    <button type="submit" class="btn btn-primary" id="scan-btn">
+                        <span id="btn-idle">Spustit analýzu</span>
+                        <span id="btn-loading" class="d-none">
+                            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                            Probíhá analýza...
+                        </span>
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
-    @if (Model is not null && Model.HasResult)
-    {
-        <h2 class="h4 mb-3">Výsledek analýzy</h2>
-
-        <div class="row g-3">
-            <div class="col-md-6">
-                <div class="card border-success h-100">
-                    <div class="card-header bg-success text-white">
-                        🟢 Nové soubory
-                    </div>
-                    <div class="card-body">
-                        @if (Model.Result!.HasAddedFiles)
-                        {
-                            <ul class="list-group list-group-flush">
-                                @foreach (FileChange file in Model.Result!.AddedFiles)
-                                {
-                                    <li class="list-group-item">
-                                        @file.Path
-                                        <span class="badge bg-secondary float-end">
-                                            verze @file.Version
-                                        </span>
-                                    </li>
-                                }
-                            </ul>
-                        }
-                        else
-                        {
-                            <div class="text-muted">Žádné nové soubory.</div>
-                        }
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="card border-warning h-100">
-                    <div class="card-header bg-warning text-dark">
-                        🟡 Změněné soubory
-                    </div>
-                    <div class="card-body">
-                        @if (Model.Result!.HasModifiedFiles)
-                        {
-                            <ul class="list-group list-group-flush">
-                                @foreach (FileChange file in Model.Result!.ModifiedFiles)
-                                {
-                                    <li class="list-group-item">
-                                        @file.Path
-                                        <span class="badge bg-secondary float-end">
-                                            v@file.Version
-                                        </span>
-                                    </li>
-                                }
-                            </ul>
-                        }
-                        else
-                        {
-                            <div class="text-muted">Žádné změněné soubory.</div>
-                        }
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="card border-danger h-100">
-                    <div class="card-header bg-danger text-white">
-                        🔴 Smazané soubory
-                    </div>
-                    <div class="card-body">
-                        @if (Model.Result!.HasDeletedFiles)
-                        {
-                            <ul class="list-group list-group-flush">
-                                @foreach (string file in Model.Result!.DeletedFiles)
-                                {
-                                    <li class="list-group-item">@file</li>
-                                }
-                            </ul>
-                        }
-                        else
-                        {
-                            <div class="text-muted">Žádné smazané soubory.</div>
-                        }
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="card border-secondary h-100">
-                    <div class="card-header bg-secondary text-white">
-                        📁 Smazané adresáře
-                    </div>
-                    <div class="card-body">
-                        @if (Model.Result!.HasDeletedDirectories)
-                        {
-                            <ul class="list-group list-group-flush">
-                                @foreach (string dir in Model.Result!.DeletedDirectories)
-                                {
-                                    <li class="list-group-item">@dir</li>
-                                }
-                            </ul>
-                        }
-                        else
-                        {
-                            <div class="text-muted">Žádné smazané adresáře.</div>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
+    @{
+        ScanResult r = Model.Result ?? new ScanResult();
+        string fileChangeCardPath = "Shared/_FileChangeCard";
+        string stringListCardPath = "Shared/_StringListCard";
     }
+
+    <h2 class="h4 mb-3">Výsledek analýzy</h2>
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            @await Html.PartialAsync(fileChangeCardPath, new FileChangeCardViewModel
+            {
+                Title = "Nové soubory",
+                Emoji = "🟢",
+                BorderClass = "success",
+                HeaderClass = "bg-success text-white",
+                EmptyMessage = "Žádné nové soubory.",
+                Files = r.AddedFiles
+            })
+        </div>
+        <div class="col-md-6">
+            @await Html.PartialAsync(fileChangeCardPath, new FileChangeCardViewModel
+            {
+                Title = "Změněné soubory",
+                Emoji = "🟡",
+                BorderClass = "warning",
+                HeaderClass = "bg-warning text-dark",
+                EmptyMessage = "Žádné změněné soubory.",
+                Files = r.ModifiedFiles
+            })
+        </div>
+        <div class="col-md-6">
+            @await Html.PartialAsync(stringListCardPath, new StringListCardViewModel
+            {
+                Title = "Smazané soubory",
+                Emoji = "🔴",
+                BorderClass = "danger",
+                HeaderClass = "bg-danger text-white",
+                EmptyMessage = "Žádné smazané soubory.",
+                Items = r.DeletedFiles
+            })
+        </div>
+        <div class="col-md-6">
+            @await Html.PartialAsync(stringListCardPath, new StringListCardViewModel
+            {
+                Title = "Smazané adresáře",
+                Emoji = "📁",
+                BorderClass = "secondary",
+                HeaderClass = "bg-secondary text-white",
+                EmptyMessage = "Žádné smazané adresáře.",
+                Items = r.DeletedDirectories
+            })
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/scan.js"></script>
+}

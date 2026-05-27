@@ -1,0 +1,24 @@
+﻿@using Task_DirectoryTracker.Models.Partials
+
+@model StringListCardViewModel
+
+<div class="card border-@Model.BorderClass h-100">
+    <div class="card-header @Model.HeaderClass">
+        @Model.Emoji @Model.Title
+    </div>
+    <div class="card-body scan-card-body">
+        @if (Model.HasItems)
+        {
+            <ul class="list-group list-group-flush">
+                @foreach (string item in Model.Items)
+                {
+                    <li class="list-group-item text-truncate" title="@item">@item</li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="text-muted mb-0">@Model.EmptyMessage</p>
+        }
+    </div>
+</div>
