@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Options;
 using Task_DirectoryTracker.Abstractions;
-using Task_DirectoryTracker.Models;
+using Task_DirectoryTracker.Models.Entities;
 using Task_DirectoryTracker.Services.Common;
 
 namespace Task_DirectoryTracker.Services;

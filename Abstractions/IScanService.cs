@@ -1,4 +1,4 @@
-﻿using Task_DirectoryTracker.Models;
+﻿using Task_DirectoryTracker.Models.Entities;
 
 namespace Task_DirectoryTracker.Abstractions;
 

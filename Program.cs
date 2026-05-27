@@ -1,6 +1,6 @@
 using Task_DirectoryTracker.Abstractions;
 using Task_DirectoryTracker.Middlewares;
-using Task_DirectoryTracker.Models;
+using Task_DirectoryTracker.Models.Entities;
 using Task_DirectoryTracker.Services;
 
 var builder = WebApplication.CreateBuilder(args);

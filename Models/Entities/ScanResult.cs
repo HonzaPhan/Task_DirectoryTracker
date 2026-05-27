@@ -1,4 +1,4 @@
-﻿namespace Task_DirectoryTracker.Models;
+﻿namespace Task_DirectoryTracker.Models.Entities;
 
 /// <summary>
 /// ScanResult represents the result of scanning a directory for changes.

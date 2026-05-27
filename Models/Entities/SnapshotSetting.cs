@@ -1,4 +1,4 @@
-﻿namespace Task_DirectoryTracker.Models;
+﻿namespace Task_DirectoryTracker.Models.Entities;
 
 /// <summary>
 /// Defines the settings for snapshot storage, including the file extension for snapshot files and the directory where snapshots are stored. <br />

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Task_DirectoryTracker.Abstractions;
-using Task_DirectoryTracker.Models;
+using Task_DirectoryTracker.Models.Entities;
+using Task_DirectoryTracker.Models.Partials;
 
 namespace Task_DirectoryTracker.Controllers;
 

@@ -1,4 +1,6 @@
-﻿namespace Task_DirectoryTracker.Models;
+﻿using Task_DirectoryTracker.Models.Entities;
+
+namespace Task_DirectoryTracker.Models.ViewModels;
 
 public class ScanPageViewModel
 {

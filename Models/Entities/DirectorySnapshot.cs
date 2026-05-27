@@ -1,4 +1,4 @@
-﻿namespace Task_DirectoryTracker.Models;
+﻿namespace Task_DirectoryTracker.Models.Entities;
 
 /// <summary>
 /// DirectorySnapshot represents a snapshot of a directory at a specific point in time. 

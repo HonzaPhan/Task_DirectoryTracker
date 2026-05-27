@@ -1,6 +1,6 @@
 ﻿using Task_DirectoryTracker.Enums;
 
-namespace Task_DirectoryTracker.Models;
+namespace Task_DirectoryTracker.Models.Entities;
 
 /// <summary>
 /// FileChange represents a change that has occurred to a file in the directory.

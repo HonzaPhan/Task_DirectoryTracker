@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Task_DirectoryTracker.Models;
+namespace Task_DirectoryTracker.Models.ViewModels;
 
 public class ScanRequestViewModel
 {

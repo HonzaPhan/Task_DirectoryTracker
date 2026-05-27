@@ -1,5 +1,5 @@
 ﻿using Task_DirectoryTracker.Enums;
-using Task_DirectoryTracker.Models;
+using Task_DirectoryTracker.Models.Entities;
 
 namespace Task_DirectoryTracker.Services.Common;
 
