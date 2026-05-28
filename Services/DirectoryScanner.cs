@@ -1,5 +1,4 @@
 ﻿using Task_DirectoryTracker.Abstractions;
-using Task_DirectoryTracker.Models;
 using Task_DirectoryTracker.Models.Entities;
 
 namespace Task_DirectoryTracker.Services;
@@ -17,14 +16,14 @@ public sealed class DirectoryScanner(IHashService hashService) : IDirectoryScann
     /// </summary>
     /// <param name="rootPath"> The path of the root directory to scan. It should be an absolute path.</param>
     /// <returns> A <see cref="DirectorySnapshot"/> containing the structure and file information of the scanned directory.</returns>
-    /// <exception cref="DirectoryNotFoundException">Thrown if the specified root path does not exist or contains no directories.</exception>
+    /// <exception cref="DirectoryNotFoundException">Thrown if <paramref name="rootPath"/> does not exist.</exception>
     public async Task<DirectorySnapshot> ScanAsync(string rootPath)
     {
-        List<string> files = [.. Directory.EnumerateFiles(rootPath, "*", SearchOption.AllDirectories)];
-        List<string> directories = [.. Directory.EnumerateDirectories(rootPath, "*", SearchOption.AllDirectories)];
+        if (!Directory.Exists(rootPath))
+            throw new DirectoryNotFoundException($"Root path '{rootPath}' does not exist.");
 
-        if (directories is { Count: 0 })
-            throw new DirectoryNotFoundException("No directories found in the specified root path.");
+        IEnumerable<string> files = [.. Directory.EnumerateFiles(rootPath, "*", SearchOption.AllDirectories)];
+        IEnumerable<string> directories = [.. Directory.EnumerateDirectories(rootPath, "*", SearchOption.AllDirectories)];
 
         DirectorySnapshot snapshot = new()
         {
@@ -32,19 +31,20 @@ public sealed class DirectoryScanner(IHashService hashService) : IDirectoryScann
             CreatedAt = DateTime.UtcNow
         };
 
-        foreach (string file in files)
+        FileSnapshot[] snapshots = await Task.WhenAll(files.Select(async file =>
         {
             FileInfo info = new(file);
-
-            snapshot.Files.Add(new FileSnapshot
+            return new FileSnapshot
             {
                 Path = Path.GetRelativePath(rootPath, file),
                 Hash = await _hashService.ComputeHashAsync(file),
                 Version = 1,
                 LastModification = info.LastWriteTimeUtc,
                 Size = info.Length
-            });
-        }
+            };
+        }));
+
+        snapshot.Files.AddRange(snapshots);
 
         snapshot.Directories.AddRange(directories.Select(d => Path.GetRelativePath(rootPath, d)));
         return snapshot;
