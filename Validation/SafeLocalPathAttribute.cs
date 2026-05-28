@@ -7,7 +7,7 @@ public sealed partial class SafeLocalPathAttribute : ValidationAttribute
 {
     private static readonly Regex InvalidPathCharsRegex = SafeLocalPathRegex();
 
-    [GeneratedRegex(@"[\x00-\x1F<>:""/\\|?*]")]
+    [GeneratedRegex(@"[\x00-\x1F]")]
     private static partial Regex SafeLocalPathRegex();
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
