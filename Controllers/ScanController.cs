@@ -18,15 +18,7 @@ public sealed class ScanController(IScanService scanService) : Controller
         if (!ModelState.IsValid)
             return View(new ScanPageViewModel { Request = request });
 
-        string reqPath = request.Path;
-
-        if (!Directory.Exists(reqPath))
-        {
-            ModelState.AddModelError(nameof(reqPath), "Directory does not exist.");
-            return View(new ScanPageViewModel { Request = request });
-        }
-
-        ScanResult result = await _scanService.ScanAsync(reqPath);
+        ScanResult result = await _scanService.ScanAsync(request.Path);
         return View(new ScanPageViewModel { Request = request, Result = result });
     }
 }

@@ -1,4 +1,5 @@
-﻿using Task_DirectoryTracker.Abstractions;
+﻿using Asp.Versioning;
+using Task_DirectoryTracker.Abstractions;
 using Task_DirectoryTracker.Middlewares;
 using Task_DirectoryTracker.Models.Entities;
 using Task_DirectoryTracker.Services;
@@ -23,6 +24,19 @@ internal static class DependencyInjection
         services.AddScoped<IChangeDetector, ChangeDetector>();
         services.AddScoped<ISnapshotStorage, SnapshotStorage>();
         services.AddScoped<IScanService, ScanService>();
+
+        // Configure API versioning
+        services.AddApiVersioning(options =>
+        {
+            options.DefaultApiVersion = new ApiVersion(1, 0);
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.ReportApiVersions = true;
+            options.ApiVersionReader = ApiVersionReader.Combine(
+                new UrlSegmentApiVersionReader(),
+                new HeaderApiVersionReader("X-Api-Version")
+            );
+        })
+        .AddMvc();
 
         // Configure addtional settings from appsettings.json
         services.Configure<SnapshotSetting>(builder.Configuration.GetSection("SnapshotSettings"));
